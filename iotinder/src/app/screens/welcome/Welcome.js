@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
 function Welcome() {
@@ -8,6 +9,7 @@ function Welcome() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        flexDirection: "column",
         marginTop: "5rem",
       }}
     >
@@ -31,8 +33,17 @@ function Welcome() {
           variant="p"
           component="p"
         >
-          Testez si vous êtes copatible avec votre crush &#128155;
+          Testez si vous êtes compatible avec votre crush &#128155;
         </Typography>
+      </Box>
+      <Box
+        sx={{
+          marginTop: "5rem",
+        }}
+      >
+        <Box>
+          <Button variant="outlined">Commencer</Button>
+        </Box>
       </Box>
     </Box>
   );
