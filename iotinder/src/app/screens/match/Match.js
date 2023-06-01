@@ -4,16 +4,17 @@ import mqtt from "precompiled-mqtt";
 import questionsList from "../../assets/questions";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 function Match() {
   const navigate = useNavigate();
+  const url = "mqtt://test.mosquitto.org:8080";
   const [client, setClient] = useState(null);
   const [activeQuestion, setActiveQuestion] = useState();
   const [idList, setIdList] = useState([]);
-  const url = "mqtt://test.mosquitto.org:8080";
+  const [answerArrayOne, setAnswerArrayOne] = useState([]);
+  const [answerArrayTwo, setAnswerArrayTwo] = useState([]);
 
   function getNewRandomQuestion() {
     const randomQuestion =
@@ -48,8 +49,21 @@ function Match() {
     if (client) {
       client.on("connect", () => {
         console.log("connected");
-        //client.publish("test", "toto");
-        //setConnectStatus("Connected");
+        client.subscribe("YesButton", (error) => {
+          if (error) {
+            console.log("Subscribe to topics error", error);
+            return;
+          }
+          console.log("Subscribed to YesButton");
+        });
+
+        client.subscribe("NoButton", (error) => {
+          if (error) {
+            console.log("Subscribe to topics error", error);
+            return;
+          }
+          console.log("Subscribed to NoButton");
+        });
       });
 
       client.on("error", (err) => {
@@ -63,12 +77,30 @@ function Match() {
 
       client.on("message", (topic, message) => {
         const payload = { topic, message: message.toString() };
-        console.log("payload", payload);
+        const payloadAnswer = JSON.parse(payload.message);
+
+        if (payloadAnswer.remote64 === "0013a20041a7133c") {
+          if (payload.topic === "NoButton") {
+            setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 0]);
+          } else {
+            setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 1]);
+          }
+        } else if (payloadAnswer.remote64 === "0013a20041c34aa8") {
+          if (payload.topic === "NoButton") {
+            setAnswerArrayTwo((answerArrayTwo) => [...answerArrayTwo, 0]);
+          } else {
+            setAnswerArrayTwo((answerArrayTwo) => [...answerArrayTwo, 1]);
+          }
+        }
+
+        console.log(answerArrayOne);
+        console.log(answerArrayTwo);
+        handleAnswer();
       });
     }
-  }, [client]);
+  }, [client, handleAnswer]);
 
-  function handleAnswer(answer) {
+  function handleAnswer() {
     if (idList.length <= 10) {
       loadQuestion();
     } else {
@@ -116,6 +148,24 @@ function Match() {
               {activeQuestion}
             </Typography>
           </Box>
+        </Box>
+      </Box>
+    </>
+  );
+}
+
+export default Match;
+
+/*
+, {
+  // clientId: "mqttjs_" + Math.random().toString(16).substr(2, 8),
+  connectTimeout: 5000,
+  hostname: "x.xxx.xx.xxx",
+  port: 8000,
+  path: "/mqtt",
+}
+
+// old buttons
           <Box>
             <Box
               sx={{
@@ -144,20 +194,5 @@ function Match() {
               </Button>
             </Box>
           </Box>
-        </Box>
-      </Box>
-    </>
-  );
-}
 
-export default Match;
-
-/*
-, {
-  // clientId: "mqttjs_" + Math.random().toString(16).substr(2, 8),
-  connectTimeout: 5000,
-  hostname: "x.xxx.xx.xxx",
-  port: 8000,
-  path: "/mqtt",
-}
 */
