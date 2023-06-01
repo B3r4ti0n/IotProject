@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 function Match() {
   const navigate = useNavigate();
@@ -24,15 +26,16 @@ function Match() {
 
   return (
     <>
-      <Button
+      <IconButton
+        color="primary"
         sx={{
           margin: "2rem",
         }}
-        variant="outlined"
+        aria-label="back to welcome page"
         onClick={() => navigate("/")}
       >
-        Back
-      </Button>
+        <ArrowBackIcon />
+      </IconButton>
       <Box
         sx={{
           display: "flex",
