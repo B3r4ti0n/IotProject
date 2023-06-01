@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
 function Welcome() {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -42,7 +44,9 @@ function Welcome() {
         }}
       >
         <Box>
-          <Button variant="outlined">Commencer</Button>
+          <Button variant="outlined" onClick={() => navigate("/match")}>
+            Commencer
+          </Button>
         </Box>
       </Box>
     </Box>
