@@ -1,10 +1,7 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import ListQuestions from "../../assets/questions";
-//import RandomQuestions from "./RandomQuestions";
 
-function Match() {
+const RandomQuestions = () => {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
 
@@ -14,8 +11,8 @@ function Match() {
     const randomQuestions = [];
     const randomAnswers = [];
     while (randomQuestions.length < 10) {
-      const randomIndex = Math.floor(Math.random() * questionList.length);
-      const randomQuestion = questionList[randomIndex];
+      const randomIndex = Math.floor(Math.random() * ListQuestions.length);
+      const randomQuestion = ListQuestions[randomIndex];
       if (!randomQuestions.includes(randomQuestion)) {
         randomQuestions.push(randomQuestion);
         randomAnswers.push(null)
@@ -32,20 +29,7 @@ const handleAnswer = (index, answer) => {
 }
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: "5rem",
-      }}
-    >
-      <Box>
-        <Typography variant="h1" component="h2">
-          Match
-        </Typography>
-      </Box>
-      <Box>
+    <div>
       <button onClick={generateQuestions}>Générer 10 questions aléatoires</button>
         {questions.length > 0 && (
         <ul>
@@ -58,9 +42,8 @@ const handleAnswer = (index, answer) => {
           ))}
         </ul>
       )}
-    </Box>
-    </Box>
+    </div>
   );
-}
+};
 
-export default Match;
+export default RandomQuestions;
