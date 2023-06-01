@@ -1,6 +1,4 @@
-import React from "react";
-
-const ListQuestions = () => {
+const QuestionList = () => {
   const questions = [
     {
       id: 1,
@@ -21,7 +19,6 @@ const ListQuestions = () => {
     { id: 11, text: "Avez-vous déjà fait du camping ?" },
     { id: 12, text: "Aimez-vous lire des livres ?" },
     { id: 13, text: "Avez-vous déjà eu une fracture ?" },
-    { id: 14, text: "Préférez-vous le thé ou le café ?" },
     { id: 15, text: "Avez-vous déjà chanté du karaoke en public ?" },
     { id: 16, text: "Aimez-vous faire de la randonnée ?" },
     { id: 17, text: "Avez-vous déjà fait de la plongée sous-marine ?" },
@@ -61,4 +58,4 @@ const ListQuestions = () => {
   ];
 };
 
-export default ListQuestions;
+export default QuestionList;
