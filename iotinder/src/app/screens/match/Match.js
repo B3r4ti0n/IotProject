@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import QuestionList from "../../assets/questions";
+import questionsList from "../../assets/questions";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -10,19 +10,37 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 function Match() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState("true");
-  const [questionsArray, setQuestionsArray] = useState([]);
+  const [activeQuestion, setActiveQuestion] = useState();
+  const [idList, setIdList] = useState([]);
 
-  function loadQuestions() {
-    // Load questions and set questions array
+  function getNewRandomQuestion() {
+    const randomQuestion =
+      questionsList[Math.floor(Math.random() * questionsList.length)];
+    return randomQuestion;
+  }
+
+  function loadQuestion() {
+    let newQuestionAded = true;
+    while (newQuestionAded) {
+      const randomQuestion = getNewRandomQuestion();
+      if (!idList.includes(randomQuestion.id)) {
+        setIdList((idList) => [...idList, randomQuestion.id]);
+        setActiveQuestion(randomQuestion.text);
+        newQuestionAded = false;
+      }
+    }
   }
 
   useEffect(() => {
-    loadQuestions();
+    loadQuestion();
   }, []);
 
   function handleAnswer(answer) {
-    // Handle yes answer
-    console.log(answer);
+    if (idList.length <= 10) {
+      loadQuestion();
+    } else {
+      navigate("/Result");
+    }
   }
 
   return (
@@ -52,7 +70,7 @@ function Match() {
           }}
         >
           <Typography variant="h4" component="h4">
-            Question 1/1
+            Question {idList.length - 2}/1
           </Typography>
         </Box>
         <Box>
@@ -62,7 +80,7 @@ function Match() {
             }}
           >
             <Typography variant="h6" component="h6">
-              Aimez-vouz la science fiction ?
+              {activeQuestion}
             </Typography>
           </Box>
           <Box>
