@@ -1,7 +1,6 @@
 import React from "react";
 
-const ListQuestions = () => {
-  const questions = [
+  const questionsList = [
     {
       id: 1,
       text: "Avez-vous déjà voyagé en dehors de votre pays d'origine ?",
@@ -59,6 +58,5 @@ const ListQuestions = () => {
     { id: 49, text: "Avez-vous déjà fait un safari ?" },
     { id: 50, text: "Aimez-vous aller dans des galeries d'art ?" },
   ];
-};
 
-export default ListQuestions;
+export default questionsList;

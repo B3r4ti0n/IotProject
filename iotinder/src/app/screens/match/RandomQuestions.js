@@ -1,18 +1,17 @@
 import { useState } from "react";
-import ListQuestions from "../../assets/questions";
+import questionsList from "../../assets/questions";
 
 const RandomQuestions = () => {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
 
-  const questionList = ListQuestions();
 
     const generateQuestions = () => {
     const randomQuestions = [];
     const randomAnswers = [];
     while (randomQuestions.length < 10) {
-      const randomIndex = Math.floor(Math.random() * ListQuestions.length);
-      const randomQuestion = ListQuestions[randomIndex];
+      const randomIndex = Math.floor(Math.random() * questionsList.length);
+      const randomQuestion = questionsList[randomIndex];
       if (!randomQuestions.includes(randomQuestion)) {
         randomQuestions.push(randomQuestion);
         randomAnswers.push(null)
