@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -7,14 +7,11 @@ import appLogo from "../../assets/appLogo.png";
 
 function Result() {
   const navigate = useNavigate();
-  const [result, setResult] = useState("compatible !");
-
-  function getResult() {
-    // Get result here
-  }
+  const location = useLocation();
+  const [result, setResult] = useState("");
 
   useEffect(() => {
-    getResult();
+    setResult(location.state.compatibility);
   }, []);
 
   return (

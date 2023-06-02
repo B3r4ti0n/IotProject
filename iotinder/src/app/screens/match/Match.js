@@ -10,7 +10,7 @@ import appLogo from "../../assets/appLogo.png";
 
 function Match() {
   const navigate = useNavigate();
-  const url = "mqtt://test.mosquitto.org:8080";
+  const url = "mqtt://test.mosquitto.org:8081";
   const [client, setClient] = useState(null);
   const [activeQuestion, setActiveQuestion] = useState();
   const [idList, setIdList] = useState([]);
@@ -22,6 +22,10 @@ function Match() {
       questionsList[Math.floor(Math.random() * questionsList.length)];
     return randomQuestion;
   }
+
+  useEffect(() => {
+    handleAnswer();
+  }, [answerArrayOne.length, answerArrayTwo.length]);
 
   function loadQuestion() {
     let newQuestionAded = true;
@@ -35,13 +39,30 @@ function Match() {
     }
   }
 
+  function checkCompatibility() {
+    if (answerArrayOne === answerArrayTwo) {
+      return "compatible";
+    }
+    return "non compatible";
+  }
+
   const mqttConnect = () => {
     const client = mqtt.connect(url);
     setClient(client);
   };
 
-  function checkCompatibility() {
-    // Do the check and return true or false
+  function handleAnswer() {
+    if (answerArrayOne.length >= 10 && answerArrayTwo.length >= 10) {
+      const compatibility = checkCompatibility();
+      console.log(compatibility);
+      navigate("/Result", { state: { compatibility: compatibility } });
+    } else {
+      if (answerArrayOne.length === answerArrayTwo.length) {
+        loadQuestion();
+      } else {
+        console.log("waiting for second response");
+      }
+    }
   }
 
   useEffect(() => {
@@ -51,14 +72,6 @@ function Match() {
 
   // MQTT client update
   useEffect(() => {
-    function handleAnswer() {
-      if (idList.length <= 10) {
-        loadQuestion();
-      } else {
-        navigate("/Result");
-      }
-    }
-
     if (client) {
       client.on("connect", () => {
         console.log("connected");
@@ -98,25 +111,19 @@ function Match() {
         // First we look at the MAC addres that issues the payload
         // Second we look at the tipic recieved
         if (payloadAnswer.remote64 === "0013a20041a7133c") {
-          if (payload.topic === "NoButton") {
-            setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 0]);
-          } else {
-            setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 1]);
-          }
+          setAnswerArrayOne((answerArrayOne) => [
+            ...answerArrayOne,
+            payload.topic !== "NoButton",
+          ]);
         } else if (payloadAnswer.remote64 === "0013a20041c34aa8") {
-          if (payload.topic === "NoButton") {
-            setAnswerArrayTwo((answerArrayTwo) => [...answerArrayTwo, 0]);
-          } else {
-            setAnswerArrayTwo((answerArrayTwo) => [...answerArrayTwo, 1]);
-          }
+          setAnswerArrayTwo((answerArrayTwo) => [
+            ...answerArrayTwo,
+            payload.topic !== "NoButton",
+          ]);
         }
-
-        console.log(answerArrayOne);
-        console.log(answerArrayTwo);
-        handleAnswer();
       });
     }
-  }, [client, answerArrayOne, answerArrayTwo]);
+  }, [client]);
 
   return (
     <>
@@ -130,6 +137,22 @@ function Match() {
       >
         <ArrowBackIcon />
       </IconButton>
+      <IconButton
+        color="primary"
+        sx={{
+          margin: "2rem",
+        }}
+        aria-label="back to welcome page"
+        onClick={() => {
+          console.log("-------------------- Array One -------------------");
+          console.log(answerArrayOne);
+          console.log("------------------- Array Two -------------------");
+          console.log(answerArrayTwo);
+        }}
+      >
+        <ArrowBackIcon />
+      </IconButton>
+
       <Box
         sx={{
           display: "flex",
@@ -149,13 +172,14 @@ function Match() {
           alt="app logo"
           src={appLogo}
         />
+
         <Box
           sx={{
             marginBottom: "2rem",
           }}
         >
           <Typography variant="h4" component="h4">
-            Question {idList.length - 2}/1
+            Question {idList.length - 4}/1
           </Typography>
         </Box>
         <Box>
