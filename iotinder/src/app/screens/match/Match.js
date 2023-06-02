@@ -123,17 +123,13 @@ function Match() {
         // First we look at the MAC addres that issues the payload
         // Second we look at the tipic recieved
         if (payloadAnswer.remote64 === "0013a20041a7133c") {
-          if (payload.topic === "NoButton") {
-            setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 0]);
-          } else {
-            setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 1]);
-          }
+          payload.topic === "NoButton"
+            ? setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 0])
+            : setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 1]);
         } else if (payloadAnswer.remote64 === "0013a20041c34aa8") {
-          if (payload.topic === "NoButton") {
-            setAnswerArrayTwo((answerArrayTwo) => [...answerArrayTwo, 0]);
-          } else {
-            setAnswerArrayTwo((answerArrayTwo) => [...answerArrayTwo, 1]);
-          }
+          payload.topic === "NoButton"
+            ? setAnswerArrayTwo((answerArrayTwo) => [...answerArrayTwo, 0])
+            : setAnswerArrayTwo((answerArrayTwo) => [...answerArrayTwo, 1]);
         }
       });
     }
@@ -177,7 +173,7 @@ function Match() {
           }}
         >
           <Typography variant="h4" component="h4">
-            Question {idList.length - 4}/10
+            Question {idList.length + 1 - 4}/10
           </Typography>
         </Box>
         <Box>
