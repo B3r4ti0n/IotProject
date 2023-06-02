@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import appLogo from "../../assets/appLogo.png";
 
 function Result() {
   const navigate = useNavigate();
@@ -23,9 +24,19 @@ function Result() {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        marginTop: "10rem",
+        marginTop: "8rem",
       }}
     >
+      <Box
+        component="img"
+        sx={{
+          height: "auto",
+          width: "auto",
+          marginBottom: "2rem",
+        }}
+        alt="app logo"
+        src={appLogo}
+      />
       <Box
         sx={{
           marginBottom: "2rem",
@@ -56,3 +67,6 @@ function Result() {
 }
 
 export default Result;
+
+// TO DO
+// Send message to light up led depending on result

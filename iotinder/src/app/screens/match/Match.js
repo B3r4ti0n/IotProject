@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import appLogo from "../../assets/appLogo.png";
 
 function Match() {
   const navigate = useNavigate();
@@ -39,6 +40,10 @@ function Match() {
     setClient(client);
   };
 
+  function checkCompatibility() {
+    // Do the check and return true or false
+  }
+
   useEffect(() => {
     mqttConnect();
     loadQuestion();
@@ -46,9 +51,19 @@ function Match() {
 
   // MQTT client update
   useEffect(() => {
+    function handleAnswer() {
+      if (idList.length <= 10) {
+        loadQuestion();
+      } else {
+        navigate("/Result");
+      }
+    }
+
     if (client) {
       client.on("connect", () => {
         console.log("connected");
+
+        // Topinc one subscription
         client.subscribe("YesButton", (error) => {
           if (error) {
             console.log("Subscribe to topics error", error);
@@ -57,6 +72,7 @@ function Match() {
           console.log("Subscribed to YesButton");
         });
 
+        // Topic two subscription
         client.subscribe("NoButton", (error) => {
           if (error) {
             console.log("Subscribe to topics error", error);
@@ -79,6 +95,8 @@ function Match() {
         const payload = { topic, message: message.toString() };
         const payloadAnswer = JSON.parse(payload.message);
 
+        // First we look at the MAC addres that issues the payload
+        // Second we look at the tipic recieved
         if (payloadAnswer.remote64 === "0013a20041a7133c") {
           if (payload.topic === "NoButton") {
             setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 0]);
@@ -98,15 +116,7 @@ function Match() {
         handleAnswer();
       });
     }
-  }, [client, handleAnswer]);
-
-  function handleAnswer() {
-    if (idList.length <= 10) {
-      loadQuestion();
-    } else {
-      navigate("/Result");
-    }
-  }
+  }, [client, answerArrayOne, answerArrayTwo]);
 
   return (
     <>
@@ -126,9 +136,19 @@ function Match() {
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
-          marginTop: "5rem",
+          marginTop: "3rem",
         }}
       >
+        <Box
+          component="img"
+          sx={{
+            height: "auto",
+            width: "auto",
+            marginBottom: "2rem",
+          }}
+          alt="app logo"
+          src={appLogo}
+        />
         <Box
           sx={{
             marginBottom: "2rem",

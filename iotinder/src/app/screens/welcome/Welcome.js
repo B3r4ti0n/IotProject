@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import appLogo from "../../assets/appLogo.png";
 
 function Welcome() {
   const navigate = useNavigate();
@@ -15,6 +16,16 @@ function Welcome() {
         marginTop: "5rem",
       }}
     >
+      <Box
+        component="img"
+        sx={{
+          height: "auto",
+          width: "auto",
+          marginBottom: "1rem",
+        }}
+        alt="app logo"
+        src={appLogo}
+      />
       <Box>
         <Typography variant="h1" component="h2">
           IoT-inder
@@ -35,7 +46,7 @@ function Welcome() {
           variant="p"
           component="p"
         >
-          Testez si vous êtes compatible avec votre crush &#128155;
+          Questionnaire de compatibilité &#128155;
         </Typography>
       </Box>
       <Box
