@@ -40,10 +40,13 @@ function Match() {
   }
 
   function checkCompatibility() {
-    if (answerArrayOne.toString === answerArrayTwo.toString) {
+    const arrayOneToCheck = answerArrayOne;
+    const arrayTwoToCheck = answerArrayTwo;
+    if (JSON.stringify(arrayOneToCheck) === JSON.stringify(arrayTwoToCheck)) {
       client.publish("LedOn", "D3");
       return "compatible";
     }
+
     client.publish("LedOn", "D2");
     return "non compatible";
   }
@@ -112,15 +115,17 @@ function Match() {
         // First we look at the MAC addres that issues the payload
         // Second we look at the tipic recieved
         if (payloadAnswer.remote64 === "0013a20041a7133c") {
-          setAnswerArrayOne((answerArrayOne) => [
-            ...answerArrayOne,
-            payload.topic !== "NoButton",
-          ]);
+          if (payload.topic === "NoButton") {
+            setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 0]);
+          } else {
+            setAnswerArrayOne((answerArrayOne) => [...answerArrayOne, 1]);
+          }
         } else if (payloadAnswer.remote64 === "0013a20041c34aa8") {
-          setAnswerArrayTwo((answerArrayTwo) => [
-            ...answerArrayTwo,
-            payload.topic !== "NoButton",
-          ]);
+          if (payload.topic === "NoButton") {
+            setAnswerArrayTwo((answerArrayTwo) => [...answerArrayTwo, 0]);
+          } else {
+            setAnswerArrayTwo((answerArrayTwo) => [...answerArrayTwo, 1]);
+          }
         }
       });
     }
@@ -184,3 +189,17 @@ function Match() {
 }
 
 export default Match;
+
+/*
+if (payloadAnswer.remote64 === "0013a20041a7133c") {
+  setAnswerArrayOne((answerArrayOne) => [
+    ...answerArrayOne,
+    payload.topic !== "NoButton",
+  ]);
+} else if (payloadAnswer.remote64 === "0013a20041c34aa8") {
+  setAnswerArrayTwo((answerArrayTwo) => [
+    ...answerArrayTwo,
+    payload.topic !== "NoButton",
+  ]);
+}
+*/
