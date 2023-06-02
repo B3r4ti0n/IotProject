@@ -42,7 +42,15 @@ function Match() {
   function checkCompatibility() {
     const arrayOneToCheck = answerArrayOne;
     const arrayTwoToCheck = answerArrayTwo;
-    if (JSON.stringify(arrayOneToCheck) === JSON.stringify(arrayTwoToCheck)) {
+    let x = 0;
+
+    for (let i = 0; i <= 10; i++) {
+      if (arrayOneToCheck[i] === arrayTwoToCheck[i]) {
+        x++;
+      }
+    }
+
+    if (x >= 6) {
       client.publish("LedOn", "D3");
       return "compatible";
     }
@@ -189,17 +197,3 @@ function Match() {
 }
 
 export default Match;
-
-/*
-if (payloadAnswer.remote64 === "0013a20041a7133c") {
-  setAnswerArrayOne((answerArrayOne) => [
-    ...answerArrayOne,
-    payload.topic !== "NoButton",
-  ]);
-} else if (payloadAnswer.remote64 === "0013a20041c34aa8") {
-  setAnswerArrayTwo((answerArrayTwo) => [
-    ...answerArrayTwo,
-    payload.topic !== "NoButton",
-  ]);
-}
-*/
