@@ -1,18 +1,50 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import mqtt from "precompiled-mqtt";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import appLogo from "../../assets/appLogo.png";
 
 function Result() {
+  const url = "mqtt://test.mosquitto.org:8081";
   const navigate = useNavigate();
   const location = useLocation();
+  const [client, setClient] = useState(null);
   const [result, setResult] = useState("");
 
+  const mqttConnect = () => {
+    const client = mqtt.connect(url);
+    setClient(client);
+  };
+
   useEffect(() => {
+    mqttConnect();
     setResult(location.state.compatibility);
   }, []);
+
+  // MQTT client update
+  useEffect(() => {
+    if (client) {
+      client.on("connect", () => {
+        console.log("connected");
+      });
+
+      client.on("error", (err) => {
+        console.error("Connection error: ", err);
+        client.end();
+      });
+
+      client.on("reconnect", () => {
+        //setConnectStatus("Reconnecting");
+      });
+    }
+  }, [client]);
+
+  function handleNewMatch() {
+    client.publish("LedOff", "D2");
+    client.publish("LedOff", "D3");
+  }
 
   return (
     <Box
@@ -54,7 +86,10 @@ function Result() {
             marginTop: "4rem",
           }}
           variant="outlined"
-          onClick={() => navigate("/")}
+          onClick={() => {
+            handleNewMatch();
+            navigate("/");
+          }}
         >
           Recommencer
         </Button>

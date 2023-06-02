@@ -40,9 +40,11 @@ function Match() {
   }
 
   function checkCompatibility() {
-    if (answerArrayOne === answerArrayTwo) {
+    if (answerArrayOne.toString === answerArrayTwo.toString) {
+      client.publish("LedOn", "D3");
       return "compatible";
     }
+    client.publish("LedOn", "D2");
     return "non compatible";
   }
 
@@ -54,7 +56,6 @@ function Match() {
   function handleAnswer() {
     if (answerArrayOne.length >= 10 && answerArrayTwo.length >= 10) {
       const compatibility = checkCompatibility();
-      console.log(compatibility);
       navigate("/Result", { state: { compatibility: compatibility } });
     } else {
       if (answerArrayOne.length === answerArrayTwo.length) {
@@ -137,22 +138,6 @@ function Match() {
       >
         <ArrowBackIcon />
       </IconButton>
-      <IconButton
-        color="primary"
-        sx={{
-          margin: "2rem",
-        }}
-        aria-label="back to welcome page"
-        onClick={() => {
-          console.log("-------------------- Array One -------------------");
-          console.log(answerArrayOne);
-          console.log("------------------- Array Two -------------------");
-          console.log(answerArrayTwo);
-        }}
-      >
-        <ArrowBackIcon />
-      </IconButton>
-
       <Box
         sx={{
           display: "flex",
@@ -179,7 +164,7 @@ function Match() {
           }}
         >
           <Typography variant="h4" component="h4">
-            Question {idList.length - 4}/1
+            Question {idList.length - 4}/10
           </Typography>
         </Box>
         <Box>
